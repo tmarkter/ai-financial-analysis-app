@@ -168,8 +168,8 @@ export function ComparisonWidget({ status, data, error }: Props) {
                         <th className="text-left py-3 px-4 font-semibold">Metric</th>
                         {data.companies.map((company, idx) => (
                           <th key={idx} className="text-left py-3 px-4 font-semibold">
-                            {company.name}
-                            <div className="text-xs font-normal text-muted-foreground">{company.ticker}</div>
+                            {typeof company.name === 'string' ? company.name : String(company.name || company.ticker)}
+                            <div className="text-xs font-normal text-muted-foreground">{typeof company.ticker === 'string' ? company.ticker : String(company.ticker || '')}</div>
                           </th>
                         ))}
                       </tr>
@@ -251,7 +251,7 @@ export function ComparisonWidget({ status, data, error }: Props) {
                         <td className="py-3 px-4 text-sm text-muted-foreground">Sector</td>
                         {data.companies.map((company, idx) => (
                           <td key={idx} className="py-3 px-4 text-sm">
-                            {company.sector || 'N/A'}
+                            {typeof company.sector === 'string' ? company.sector : (company.sector ? String(company.sector) : 'N/A')}
                           </td>
                         ))}
                       </tr>
@@ -280,9 +280,9 @@ export function ComparisonWidget({ status, data, error }: Props) {
                     <div key={idx} className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-sm font-medium text-green-500">{w.category}</p>
-                          <p className="text-sm font-bold mt-1">{w.company}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{w.reason}</p>
+                          <p className="text-sm font-medium text-green-500">{typeof w.category === 'string' ? w.category : String(w.category || 'Category')}</p>
+                          <p className="text-sm font-bold mt-1">{typeof w.company === 'string' ? w.company : String(w.company || 'N/A')}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{typeof w.reason === 'string' ? w.reason : String(w.reason || '')}</p>
                         </div>
                       </div>
                     </div>
