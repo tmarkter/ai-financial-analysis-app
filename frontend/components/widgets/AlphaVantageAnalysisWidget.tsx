@@ -51,7 +51,7 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                 <BarChart3 className="h-4 w-4" />
                 Executive Summary
               </h4>
-              <p className="text-sm">{data.executiveSummary}</p>
+              <p className="text-sm">{typeof data.executiveSummary === 'string' ? data.executiveSummary : String(data.executiveSummary || 'No summary available')}</p>
             </div>
 
             {/* Micro Analysis */}
@@ -68,10 +68,10 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                       {data.microAnalysis.profitability.map((metric, idx) => (
                         <div key={idx} className="p-3 bg-muted rounded-lg">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-muted-foreground">{metric.name}</span>
-                            <span className="text-sm font-semibold">{metric.value}</span>
+                            <span className="text-xs text-muted-foreground">{typeof metric?.name === 'string' ? metric.name : String(metric?.name || 'Metric')}</span>
+                            <span className="text-sm font-semibold">{typeof metric?.value === 'string' ? metric.value : String(metric?.value || 'N/A')}</span>
                           </div>
-                          <p className="text-xs text-muted-foreground">{metric.interpretation}</p>
+                          <p className="text-xs text-muted-foreground">{typeof metric?.interpretation === 'string' ? metric.interpretation : String(metric?.interpretation || '')}</p>
                         </div>
                       ))}
                     </div>
@@ -85,10 +85,10 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                       {data.microAnalysis.valuation.map((metric, idx) => (
                         <div key={idx} className="p-3 bg-muted rounded-lg">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-muted-foreground">{metric.name}</span>
-                            <span className="text-sm font-semibold">{metric.value}</span>
+                            <span className="text-xs text-muted-foreground">{typeof metric?.name === 'string' ? metric.name : String(metric?.name || 'Metric')}</span>
+                            <span className="text-sm font-semibold">{typeof metric?.value === 'string' ? metric.value : String(metric?.value || 'N/A')}</span>
                           </div>
-                          <p className="text-xs text-muted-foreground">{metric.interpretation}</p>
+                          <p className="text-xs text-muted-foreground">{typeof metric?.interpretation === 'string' ? metric.interpretation : String(metric?.interpretation || '')}</p>
                         </div>
                       ))}
                     </div>
@@ -102,10 +102,10 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                       {data.microAnalysis.growth.map((metric, idx) => (
                         <div key={idx} className="p-3 bg-muted rounded-lg">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-muted-foreground">{metric.name}</span>
-                            <span className="text-sm font-semibold">{metric.value}</span>
+                            <span className="text-xs text-muted-foreground">{typeof metric?.name === 'string' ? metric.name : String(metric?.name || 'Metric')}</span>
+                            <span className="text-sm font-semibold">{typeof metric?.value === 'string' ? metric.value : String(metric?.value || 'N/A')}</span>
                           </div>
-                          <p className="text-xs text-muted-foreground">{metric.interpretation}</p>
+                          <p className="text-xs text-muted-foreground">{typeof metric?.interpretation === 'string' ? metric.interpretation : String(metric?.interpretation || '')}</p>
                         </div>
                       ))}
                     </div>
@@ -119,10 +119,10 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                       {data.microAnalysis.financialHealth.map((metric, idx) => (
                         <div key={idx} className="p-3 bg-muted rounded-lg">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-muted-foreground">{metric.name}</span>
-                            <span className="text-sm font-semibold">{metric.value}</span>
+                            <span className="text-xs text-muted-foreground">{typeof metric?.name === 'string' ? metric.name : String(metric?.name || 'Metric')}</span>
+                            <span className="text-sm font-semibold">{typeof metric?.value === 'string' ? metric.value : String(metric?.value || 'N/A')}</span>
                           </div>
-                          <p className="text-xs text-muted-foreground">{metric.interpretation}</p>
+                          <p className="text-xs text-muted-foreground">{typeof metric?.interpretation === 'string' ? metric.interpretation : String(metric?.interpretation || '')}</p>
                         </div>
                       ))}
                     </div>
@@ -140,15 +140,15 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
               <div className="space-y-3">
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-xs font-semibold text-muted-foreground mb-1">Sector Performance</p>
-                  <p className="text-sm">{data.macroAnalysis.sector}</p>
+                  <p className="text-sm">{typeof data.macroAnalysis.sector === 'string' ? data.macroAnalysis.sector : String(data.macroAnalysis.sector || 'N/A')}</p>
                 </div>
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-xs font-semibold text-muted-foreground mb-1">Market Sentiment</p>
-                  <p className="text-sm">{data.macroAnalysis.marketSentiment}</p>
+                  <p className="text-sm">{typeof data.macroAnalysis.marketSentiment === 'string' ? data.macroAnalysis.marketSentiment : String(data.macroAnalysis.marketSentiment || 'N/A')}</p>
                 </div>
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-xs font-semibold text-muted-foreground mb-1">Technical Indicators</p>
-                  <p className="text-sm">{data.macroAnalysis.technicalIndicators}</p>
+                  <p className="text-sm">{typeof data.macroAnalysis.technicalIndicators === 'string' ? data.macroAnalysis.technicalIndicators : String(data.macroAnalysis.technicalIndicators || 'N/A')}</p>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                       {data.forwardOutlook.opportunities.map((opp, idx) => (
                         <li key={idx} className="text-sm flex items-start gap-2">
                           <span className="text-green-500 mt-1">•</span>
-                          <span>{opp}</span>
+                          <span>{typeof opp === 'string' ? opp : String(opp)}</span>
                         </li>
                       ))}
                     </ul>
@@ -181,7 +181,7 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
                       {data.forwardOutlook.risks.map((risk, idx) => (
                         <li key={idx} className="text-sm flex items-start gap-2">
                           <span className="text-red-500 mt-1">•</span>
-                          <span>{risk}</span>
+                          <span>{typeof risk === 'string' ? risk : String(risk)}</span>
                         </li>
                       ))}
                     </ul>
@@ -190,7 +190,7 @@ export function AlphaVantageAnalysisWidget({ status, data, error }: Props) {
 
                 <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
                   <p className="text-xs font-semibold text-primary mb-1">Recommendation</p>
-                  <p className="text-sm font-medium">{data.forwardOutlook.recommendation}</p>
+                  <p className="text-sm font-medium">{typeof data.forwardOutlook.recommendation === 'string' ? data.forwardOutlook.recommendation : String(data.forwardOutlook.recommendation || 'N/A')}</p>
                 </div>
               </div>
             </div>
