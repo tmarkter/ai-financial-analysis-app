@@ -57,6 +57,7 @@ export async function processCompanySnapshot(
       }
     } catch (error) {
       console.error("Alpha Vantage error:", error);
+      // If Alpha Vantage fails, we'll still continue with other data sources
     }
   }
 
@@ -121,8 +122,13 @@ Return JSON with:
       }))
     : [];
 
+  // If we have no data at all, throw an error
+  if (!priceData && !chartData && kpis.length === 0 && !fundamentals) {
+    throw new Error("Unable to fetch any data for company snapshot. Check Alpha Vantage API key or rate limits.");
+  }
+
   return {
-    summary: analysis.summary || "No summary available",
+    summary: analysis.summary || "Company snapshot data",
     priceData,
     chartData,
     kpis,

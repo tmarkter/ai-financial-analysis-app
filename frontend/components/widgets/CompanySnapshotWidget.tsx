@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function CompanySnapshotWidget({ status, data, error }: Props) {
-  const isEmpty = !data?.priceData && !data?.kpis?.length;
+  const isEmpty = status === "complete" && (!data?.priceData && !data?.kpis?.length && !data?.chartData?.length);
   
   return (
     <WidgetShell 
