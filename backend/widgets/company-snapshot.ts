@@ -1,7 +1,9 @@
 import { EntityInfo } from "../agent/entity-extraction";
-import { getGlobalQuote, getDailyTimeSeries } from "../datasources/alpha-vantage";
+import { getDailyTimeSeries } from "../datasources/alpha-vantage";
 import { getCompanyFacts } from "../datasources/sec-edgar";
 import { getOpenAI, getAlphaVantageKey } from "../agent/openai";
+import { getCompanySnapshot } from "../orchestrator/company-snapshot-orchestrator";
+import { avLimiter, callWithLimit } from "../utils/limiters";
 
 const SYSTEM_PROMPT = `You are a financial data summarizer. Using Alpha Vantage (price/volume) and SEC EDGAR (companyfacts/filings), produce:
 (1) price & day change
@@ -28,36 +30,55 @@ export interface CompanySnapshotData {
 export async function processCompanySnapshot(
   entity: EntityInfo
 ): Promise<CompanySnapshotData> {
-  const tools: Array<any> = [];
   const sources: Array<{ name: string; timestamp: string; url?: string }> = [];
 
-  // Fetch Alpha Vantage data
+  // Use orchestrator to fetch data from multiple providers with fallbacks
   let priceData;
   let chartData;
+  let coreData;
+  
   if (entity.ticker) {
     try {
-      const quote = await getGlobalQuote(entity.ticker, getAlphaVantageKey());
-      priceData = {
-        price: parseFloat(quote.price),
-        change: parseFloat(quote.change),
-        changePercent: parseFloat(quote.changePercent),
-      };
-      sources.push({
-        name: "Alpha Vantage Global Quote",
-        timestamp: new Date().toISOString(),
-        url: "https://www.alphavantage.co/",
-      });
+      // Get company core data from orchestrator (Alpha Vantage + FMP with fallbacks)
+      coreData = await getCompanySnapshot(entity.ticker);
+      
+      if (coreData.price) {
+        priceData = {
+          price: coreData.price,
+          change: coreData.change || 0,
+          changePercent: coreData.changePercent || 0,
+        };
+      }
 
-      const timeSeries = await getDailyTimeSeries(entity.ticker, getAlphaVantageKey());
-      if (timeSeries && timeSeries.length > 0) {
-        chartData = timeSeries.slice(0, 60).reverse().map((item) => ({
-          date: item.date,
-          close: item.close,
-        }));
+      // Add sources from orchestrator
+      if (coreData._sources && coreData._sources.length > 0) {
+        coreData._sources.forEach(source => {
+          sources.push({
+            name: source,
+            timestamp: new Date().toISOString(),
+          });
+        });
+      }
+
+      // Fetch time series data with rate limiting
+      const avKey = getAlphaVantageKey();
+      if (avKey) {
+        try {
+          const timeSeries = await callWithLimit(avLimiter, () => 
+            getDailyTimeSeries(entity.ticker!, avKey)
+          );
+          if (timeSeries && timeSeries.length > 0) {
+            chartData = timeSeries.slice(0, 60).reverse().map((item) => ({
+              date: item.date,
+              close: item.close,
+            }));
+          }
+        } catch (tsError) {
+          console.error("Time series error:", tsError);
+        }
       }
     } catch (error) {
-      console.error("Alpha Vantage error:", error);
-      // If Alpha Vantage fails, we'll still continue with other data sources
+      console.error("Company snapshot orchestrator error:", error);
     }
   }
 
@@ -91,6 +112,7 @@ export async function processCompanySnapshot(
         role: "user",
         content: `Analyze this company data and provide a structured summary:
 Company: ${entity.companyName || entity.ticker}
+Core Data: ${JSON.stringify(coreData)}
 Price Data: ${JSON.stringify(priceData)}
 Chart Data (last 60 days): ${JSON.stringify(chartData)}
 Fundamentals: ${JSON.stringify(fundamentals)}
@@ -123,8 +145,8 @@ Return JSON with:
     : [];
 
   // If we have no data at all, throw an error
-  if (!priceData && !chartData && kpis.length === 0 && !fundamentals) {
-    throw new Error("Unable to fetch any data for company snapshot. Check Alpha Vantage API key or rate limits.");
+  if (!priceData && !chartData && kpis.length === 0 && !fundamentals && !coreData) {
+    throw new Error("Unable to fetch any data for company snapshot. All data providers failed.");
   }
 
   return {
