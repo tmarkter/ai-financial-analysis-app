@@ -82,7 +82,7 @@ export function AnalysisDashboard() {
     <div className="flex flex-col h-screen overflow-hidden">
       <Header onNewChat={handleNewSession} />
       <div className="flex flex-1 overflow-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(360px,440px)_minmax(0,1fr)] gap-6 items-start justify-items-stretch px-4 lg:px-6 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-start justify-items-stretch">
           <ChatPanel
             messages={chatMessages}
             onNewQuery={handleNewQuery}

@@ -2,8 +2,40 @@ import { EntityInfo } from "../agent/entity-extraction";
 import { getFREDSeries } from "../datasources/fred";
 import { getOpenAI, getFREDKey } from "../agent/openai";
 
-const SYSTEM_PROMPT = `You are a macro explainer. Fetch 2–4 time series (from FRED/World Bank/IMF) most relevant to the entity's country/sector (e.g., CPI, 10Y yield, PMI, GDP growth).
-Return short notes on why each matters to the entity's valuation or risk, plus sources and last values.`;
+const SYSTEM_PROMPT = `You are a professional financial and investment analyst. Prepare a comprehensive and structured analysis of any bank (or financial institution) using a clear framework that combines both internal (Micro factors) and external (Macro factors) that investors consider before making an investment decision.
+
+✦ Deliverables:
+Executive Summary: Provide a brief overview of the bank's position and the industry context.
+
+Micro Analysis (Internal – Bank-Specific Factors):
+- Profitability: Net Interest Margin (NIM), Return on Assets (ROA), Return on Equity (ROE).
+- Asset Quality: Non-Performing Loans (NPL) ratio, Provision Coverage, Loan-to-Deposit ratio.
+- Capital Adequacy: CET1 ratio, Total Capital Ratio.
+- Operational Efficiency: Cost-to-Income ratio.
+- Growth: Loan and deposit growth trends.
+- Income Diversification: Fee-based income vs. interest income.
+- Digitalization & Innovation: Fintech integration, mobile adoption, cost efficiency from digital channels.
+- Management & Governance: Leadership quality, governance, and risk management practices.
+
+Macro Analysis (External – Market & Economic Factors):
+- Interest Rate Environment.
+- Economic Growth (GDP trends).
+- Inflation impact.
+- Unemployment levels.
+- Monetary Policy & Regulation (Basel III/IV, IFRS 9, AML/KYC, central bank rules).
+- Political & Sovereign Risk.
+- Currency Stability.
+- Competition & Market Consolidation.
+
+Valuation Metrics: Price-to-Book (P/B), Price-to-Earnings (P/E), Dividend Yield, EV/EBITDA.
+
+Forward-Looking Outlook: Opportunities, risks, and expected future performance.
+
+✦ Instructions:
+Use a structured, section-based format with clear headings and subheadings.
+Provide explanations and, where relevant, examples or implications.
+Link financial indicators to expected investor outcomes.
+Ensure the analysis is suitable for use in an equity research report or investment memo.`;
 
 export interface MacroIndicator {
   name: string;
@@ -62,7 +94,6 @@ export async function processMacroSector(
     });
   }
 
-  // Use OpenAI to explain relevance
   const openai = getOpenAI();
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -73,10 +104,18 @@ export async function processMacroSector(
       },
       {
         role: "user",
-        content: `Explain how these macro indicators relate to ${entity.companyName || entity.ticker}:
+        content: `Perform a comprehensive macro and micro analysis for ${entity.companyName || entity.ticker}.
+
+Available macro indicators:
 ${JSON.stringify(indicators.map((i) => ({ name: i.name, value: i.value })))}
 
-Return JSON with: summary (string), and for each indicator add an explanation field.`,
+Provide:
+1. Executive Summary
+2. Micro Analysis (if this is a financial institution, include all bank-specific factors; otherwise adapt to the company type)
+3. Macro Analysis using the provided indicators
+4. Key insights and forward-looking outlook
+
+Return JSON with: summary (string), and for each indicator add a detailed explanation field.`,
       },
     ],
     response_format: { type: "json_object" },

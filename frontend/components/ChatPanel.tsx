@@ -83,8 +83,8 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
           <div className="flex items-center gap-2">
             <ChatHistory onSelectSession={onSelectSession} onNewSession={onNewSession} />
             <div>
-              <h2 className="text-base md:text-lg font-semibold text-foreground">Chat Analysis</h2>
-              <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Ask about any company or financial topic</p>
+              <h2 className="text-lg md:text-xl font-semibold text-foreground">Chat Analysis</h2>
+              <p className="text-sm md:text-base text-muted-foreground hidden sm:block">Ask about any company or financial topic</p>
             </div>
           </div>
           <PromptEditor promptId="chat" promptName="Chat Assistant" />
@@ -95,7 +95,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
         <div className="space-y-4">
           {messages.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">Start by asking about a company</p>
+              <p className="text-base text-muted-foreground mb-4">Start by asking about a company</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 <Button
                   variant="outline"
@@ -137,7 +137,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
                     : "bg-muted text-foreground"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                <p className="text-base whitespace-pre-wrap">{msg.content}</p>
               </div>
             </div>
           ))}
@@ -152,7 +152,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
 
           {suggestions.length > 0 && !isStreaming && (
             <div className="mt-4 space-y-2">
-              <p className="text-xs text-muted-foreground">Suggested follow-up questions:</p>
+              <p className="text-sm text-muted-foreground">Suggested follow-up questions:</p>
               <div className="flex flex-col gap-2">
                 {suggestions.map((suggestion, idx) => (
                   <Button
@@ -181,7 +181,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Ask about any company (e.g., 'Apple analysis')..."
             disabled={isStreaming}
-            className="flex-1 text-white"
+            className="flex-1 text-white text-base"
           />
           <Button type="submit" disabled={!query.trim() || isStreaming}>
             {isStreaming ? (
