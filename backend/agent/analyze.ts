@@ -288,8 +288,8 @@ export async function analyzeQuery(
     );
   }
 
-  // Portfolio Manager Widget
-  if (entityInfo.companies && entityInfo.companies.length > 0 || entityInfo.ticker) {
+  // Portfolio Manager Widget (only for multiple companies)
+  if (entityInfo.companies && entityInfo.companies.length > 1) {
     widgetPromises.push(
       (async () => {
         await stream.send({

@@ -28,7 +28,10 @@ export async function processPortfolio(
 ): Promise<PortfolioData> {
   const sources: Array<{ name: string; timestamp: string }> = [];
   
-  const companies = entity.companies || (entity.ticker ? [{ ticker: entity.ticker, companyName: entity.companyName }] : []);
+  // Build companies list - prefer companies array, fallback to single ticker
+  const companies = entity.companies && entity.companies.length > 0 
+    ? entity.companies 
+    : (entity.ticker ? [{ ticker: entity.ticker, companyName: entity.companyName }] : []);
   
   if (companies.length === 0) {
     throw new Error("No companies found for portfolio analysis");
