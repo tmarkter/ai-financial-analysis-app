@@ -46,8 +46,15 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
       
       for await (const msg of stream) {
         try {
+          // Ensure msg is valid
+          if (!msg || typeof msg !== 'object') {
+            console.warn('Invalid message received:', msg);
+            continue;
+          }
+          
           if (msg.type === "text") {
-            chatBuffer += msg.content + "\n";
+            const content = typeof msg.content === 'string' ? msg.content : String(msg.content || '');
+            chatBuffer += content + "\n";
           } else if (msg.type === "widget_start") {
             onWidgetUpdate(msg.widgetId!, "loading");
           } else if (msg.type === "widget_complete") {
@@ -56,7 +63,8 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
             setSuggestions(msg.suggestions);
           } else if (msg.type === "error") {
             if (msg.widgetId) {
-              onWidgetUpdate(msg.widgetId, "error", undefined, msg.content);
+              const errorContent = typeof msg.content === 'string' ? msg.content : String(msg.content || 'Unknown error');
+              onWidgetUpdate(msg.widgetId, "error", undefined, errorContent);
             }
             console.error("Stream error:", msg.content);
           }
@@ -137,7 +145,9 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
                     : "bg-muted text-foreground"
                 }`}
               >
-                <p className="text-base whitespace-pre-wrap">{msg.content}</p>
+                <p className="text-base whitespace-pre-wrap">
+                  {typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content, null, 2)}
+                </p>
               </div>
             </div>
           ))}
