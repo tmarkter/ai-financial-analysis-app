@@ -49,10 +49,12 @@ export async function processCompanySnapshot(
       });
 
       const timeSeries = await getDailyTimeSeries(entity.ticker, getAlphaVantageKey());
-      chartData = timeSeries.slice(0, 60).map((item) => ({
-        date: item.date,
-        close: item.close,
-      }));
+      if (timeSeries && timeSeries.length > 0) {
+        chartData = timeSeries.slice(0, 60).reverse().map((item) => ({
+          date: item.date,
+          close: item.close,
+        }));
+      }
     } catch (error) {
       console.error("Alpha Vantage error:", error);
     }

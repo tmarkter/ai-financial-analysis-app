@@ -14,6 +14,7 @@ import { processMarketSentiment } from "../widgets/market-sentiment";
 import { processAnalystConsensus } from "../widgets/analyst-consensus";
 import { processInvestmentThesis } from "../widgets/investment-thesis";
 import { processPeerComparison } from "../widgets/peer-comparison";
+import { processAlphaVantageAnalysis } from "../widgets/alpha-vantage-analysis";
 import { extractEntityInfo } from "./entity-extraction";
 
 export async function analyzeQuery(
@@ -427,6 +428,35 @@ export async function analyzeQuery(
             type: "error",
             content: `Peer comparison failed: ${error instanceof Error ? error.message : "Unknown error"}`,
             widgetId: "peer-comparison",
+          });
+        }
+      })()
+    );
+  }
+
+  // Alpha Vantage Analysis Widget
+  if (entityInfo.ticker) {
+    widgetPromises.push(
+      (async () => {
+        await stream.send({
+          type: "widget_start",
+          content: "Running Alpha Vantage analysis...",
+          widgetId: "alpha-vantage-analysis",
+        });
+        
+        try {
+          const data = await processAlphaVantageAnalysis(entityInfo);
+          await stream.send({
+            type: "widget_complete",
+            content: "Alpha Vantage analysis ready",
+            widgetId: "alpha-vantage-analysis",
+            data,
+          });
+        } catch (error) {
+          await stream.send({
+            type: "error",
+            content: `Alpha Vantage analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+            widgetId: "alpha-vantage-analysis",
           });
         }
       })()

@@ -15,6 +15,7 @@ import { PortfolioWidget } from "./widgets/PortfolioWidget";
 import { MarketSentimentWidget } from "./widgets/MarketSentimentWidget";
 import { AnalystConsensusWidget } from "./widgets/AnalystConsensusWidget";
 import { InvestmentThesisWidget } from "./widgets/InvestmentThesisWidget";
+import { AlphaVantageAnalysisWidget } from "./widgets/AlphaVantageAnalysisWidget";
 
 interface WidgetPanelProps {
   widgets: WidgetData[];
@@ -134,6 +135,13 @@ export function WidgetPanel({ widgets }: WidgetPanelProps) {
               )}
               {widget.id === "peer-comparison" && (
                 <ComparisonWidget
+                  status={widget.status}
+                  data={widget.data}
+                  error={widget.error}
+                />
+              )}
+              {widget.id === "alpha-vantage-analysis" && (
+                <AlphaVantageAnalysisWidget
                   status={widget.status}
                   data={widget.data}
                   error={widget.error}

@@ -75,3 +75,93 @@ export async function getDailyTimeSeries(
 
   return items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
+
+export interface CompanyOverviewData {
+  symbol: string;
+  name: string;
+  description: string;
+  sector: string;
+  industry: string;
+  marketCap: string;
+  peRatio: string;
+  pegRatio: string;
+  bookValue: string;
+  dividendYield: string;
+  eps: string;
+  revenuePerShare: string;
+  profitMargin: string;
+  operatingMargin: string;
+  returnOnAssets: string;
+  returnOnEquity: string;
+  revenue: string;
+  grossProfit: string;
+  dilutedEPS: string;
+  quarterlyEarningsGrowth: string;
+  quarterlyRevenueGrowth: string;
+  analystTargetPrice: string;
+  trailingPE: string;
+  forwardPE: string;
+  priceToSales: string;
+  priceToBook: string;
+  evToRevenue: string;
+  evToEBITDA: string;
+  beta: string;
+  week52High: string;
+  week52Low: string;
+  day50MovingAverage: string;
+  day200MovingAverage: string;
+}
+
+export async function getCompanyOverview(
+  symbol: string,
+  apiKey: string
+): Promise<CompanyOverviewData> {
+  const url = `${BASE_URL}?function=OVERVIEW&symbol=${symbol}&apikey=${apiKey}`;
+  
+  const response = await fetch(url);
+  const data = await response.json() as any;
+
+  if (data["Error Message"]) {
+    throw new Error(`Alpha Vantage error: ${data["Error Message"]}`);
+  }
+
+  if (!data.Symbol) {
+    throw new Error("No company overview data available");
+  }
+
+  return {
+    symbol: data.Symbol || "",
+    name: data.Name || "",
+    description: data.Description || "",
+    sector: data.Sector || "",
+    industry: data.Industry || "",
+    marketCap: data.MarketCapitalization || "",
+    peRatio: data.PERatio || "",
+    pegRatio: data.PEGRatio || "",
+    bookValue: data.BookValue || "",
+    dividendYield: data.DividendYield || "",
+    eps: data.EPS || "",
+    revenuePerShare: data.RevenuePerShareTTM || "",
+    profitMargin: data.ProfitMargin || "",
+    operatingMargin: data.OperatingMarginTTM || "",
+    returnOnAssets: data.ReturnOnAssetsTTM || "",
+    returnOnEquity: data.ReturnOnEquityTTM || "",
+    revenue: data.RevenueTTM || "",
+    grossProfit: data.GrossProfitTTM || "",
+    dilutedEPS: data.DilutedEPSTTM || "",
+    quarterlyEarningsGrowth: data.QuarterlyEarningsGrowthYOY || "",
+    quarterlyRevenueGrowth: data.QuarterlyRevenueGrowthYOY || "",
+    analystTargetPrice: data.AnalystTargetPrice || "",
+    trailingPE: data.TrailingPE || "",
+    forwardPE: data.ForwardPE || "",
+    priceToSales: data.PriceToSalesRatioTTM || "",
+    priceToBook: data.PriceToBookRatio || "",
+    evToRevenue: data.EVToRevenue || "",
+    evToEBITDA: data.EVToEBITDA || "",
+    beta: data.Beta || "",
+    week52High: data["52WeekHigh"] || "",
+    week52Low: data["52WeekLow"] || "",
+    day50MovingAverage: data["50DayMovingAverage"] || "",
+    day200MovingAverage: data["200DayMovingAverage"] || "",
+  };
+}
