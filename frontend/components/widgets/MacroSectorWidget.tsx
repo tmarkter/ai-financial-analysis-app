@@ -15,7 +15,7 @@ export function MacroSectorWidget({ status, data, error }: Props) {
 
   return (
     <WidgetShell 
-      title="Macro & Sector" 
+      title="Macro and Micro Analysis" 
       isLoading={status === "loading"}
       error={error}
       isEmpty={isEmpty}
@@ -68,7 +68,7 @@ export function MacroSectorWidget({ status, data, error }: Props) {
       </div>
       
       <div className="absolute top-4 right-4">
-        <PromptEditor promptId="macro-sector" promptName="Macro & Sector" />
+        <PromptEditor promptId="macro-sector" promptName="Macro and Micro Analysis" />
       </div>
     </WidgetShell>
   );

@@ -127,7 +127,7 @@ Maintain objectivity and cite all sources.`,
   
   "macro-sector": {
     id: "macro-sector",
-    name: "Macro & Sector Analysis",
+    name: "Macro and Micro Analysis",
     description: "Macroeconomic indicators and sector performance tracking",
     systemPrompt: `You are a macroeconomic strategist analyzing market conditions and sector performance.
 

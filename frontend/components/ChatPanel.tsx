@@ -79,10 +79,10 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
   return (
     <div className="w-full min-w-0 flex flex-col border-r border-border bg-card">
       <div className="border-b border-border px-4 md:px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <ChatHistory onSelectSession={onSelectSession} onNewSession={onNewSession} />
-            <div>
+            <div className="min-w-0">
               <h2 className="text-lg md:text-xl font-semibold text-foreground">Chat Analysis</h2>
               <p className="text-sm md:text-base text-muted-foreground hidden sm:block">Ask about any company or financial topic</p>
             </div>
@@ -91,10 +91,10 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
         </div>
       </div>
 
-      <ScrollArea className="flex-1 px-6 py-4" ref={scrollRef}>
-        <div className="space-y-4">
+      <ScrollArea className="flex-1 px-4 md:px-6 py-4" ref={scrollRef}>
+        <div className="space-y-4 max-w-4xl">
           {messages.length === 0 && (
-            <div className="text-center py-12">
+            <div className="text-center py-8 md:py-12">
               <p className="text-base text-muted-foreground mb-4">Start by asking about a company</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 <Button
@@ -174,20 +174,20 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
         </div>
       </ScrollArea>
 
-      <form onSubmit={handleSubmit} className="border-t border-border p-4">
-        <div className="flex gap-2">
+      <form onSubmit={handleSubmit} className="border-t border-border p-4 md:p-6">
+        <div className="flex gap-2 md:gap-3">
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Ask about any company (e.g., 'Apple analysis')..."
             disabled={isStreaming}
-            className="flex-1 text-white text-base"
+            className="flex-1 text-white text-base h-11 md:h-12 px-4"
           />
-          <Button type="submit" disabled={!query.trim() || isStreaming}>
+          <Button type="submit" disabled={!query.trim() || isStreaming} size="lg" className="h-11 md:h-12 px-4 md:px-6">
             {isStreaming ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <Send className="h-4 w-4" />
+              <Send className="h-5 w-5" />
             )}
           </Button>
         </div>
