@@ -27,14 +27,10 @@ export function PromptEditor({ promptId, promptName }: PromptEditorProps) {
   const loadPrompt = async () => {
     try {
       const data = await backend.config.getPrompt({ id: promptId });
-      setPrompt(data.systemPrompt);
+      setPrompt(data.systemPrompt || "");
     } catch (error) {
       console.error("Error loading prompt:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load prompt",
-        variant: "destructive",
-      });
+      setPrompt("");
     }
   };
 

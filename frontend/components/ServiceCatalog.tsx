@@ -36,6 +36,7 @@ export function ServiceCatalog() {
       setServices(data.services);
     } catch (error) {
       console.error("Error loading services:", error);
+      setServices([]);
     }
   };
 

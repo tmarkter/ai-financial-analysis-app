@@ -28,14 +28,10 @@ export function ChatHistory({ onSelectSession, onNewSession }: ChatHistoryProps)
     setLoading(true);
     try {
       const data = await backend.chat_history.listSessions();
-      setSessions(data.sessions);
+      setSessions(data.sessions || []);
     } catch (error) {
       console.error("Error loading sessions:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load chat history",
-        variant: "destructive",
-      });
+      setSessions([]);
     } finally {
       setLoading(false);
     }
