@@ -27,7 +27,7 @@ export function FinancialAnalystWidget({ status, data, error }: Props) {
       <div className="space-y-4">
         {data?.summary && (
           <div className="p-4 bg-neutral-950 rounded-lg border border-neutral-800">
-            <p className="text-sm text-neutral-100 line-clamp-4">{data.summary}</p>
+            <p className="text-sm text-neutral-100 line-clamp-4">{typeof data.summary === 'string' ? data.summary : String(data.summary || 'No summary available')}</p>
           </div>
         )}
 
@@ -114,7 +114,7 @@ export function FinancialAnalystWidget({ status, data, error }: Props) {
               <h4 className="text-sm font-semibold mb-2 text-neutral-100">Earnings Quality</h4>
               <ul className="list-disc list-inside space-y-1">
                 {eqBullets.map((item, idx) => (
-                  <li key={idx} className="text-sm text-neutral-400 line-clamp-2">{item}</li>
+                  <li key={idx} className="text-sm text-neutral-400 line-clamp-2">{typeof item === 'string' ? item : String(item)}</li>
                 ))}
               </ul>
             </div>

@@ -38,7 +38,7 @@ export function MASpecialistWidget({ status, data, error }: Props) {
         {status === "complete" && data && (
           <div className="space-y-4">
             <div className="p-4 bg-muted rounded-lg">
-              <p className="text-sm">{data.summary}</p>
+              <p className="text-sm">{typeof data.summary === 'string' ? data.summary : String(data.summary || 'No summary available')}</p>
             </div>
 
             {data.dealEconomics && (
@@ -82,7 +82,7 @@ export function MASpecialistWidget({ status, data, error }: Props) {
                       <p className="text-xs text-muted-foreground mb-1">Synergies</p>
                       <ul className="list-disc list-inside text-sm space-y-1">
                         {data.strategicRationale.synergies.map((synergy, idx) => (
-                          <li key={idx}>{synergy}</li>
+                          <li key={idx}>{typeof synergy === 'string' ? synergy : String(synergy)}</li>
                         ))}
                       </ul>
                     </div>
@@ -90,7 +90,7 @@ export function MASpecialistWidget({ status, data, error }: Props) {
                   {data.strategicRationale.marketPosition && (
                     <div className="p-3 bg-muted rounded-lg">
                       <p className="text-xs text-muted-foreground mb-1">Market Position</p>
-                      <p className="text-sm">{data.strategicRationale.marketPosition}</p>
+                      <p className="text-sm">{typeof data.strategicRationale.marketPosition === 'string' ? data.strategicRationale.marketPosition : String(data.strategicRationale.marketPosition || 'N/A')}</p>
                     </div>
                   )}
                 </div>
@@ -103,14 +103,14 @@ export function MASpecialistWidget({ status, data, error }: Props) {
                 <div className="space-y-2">
                   {data.recentDeals.slice(0, 3).map((deal, idx) => (
                     <div key={idx} className="p-3 bg-muted rounded-lg">
-                      <p className="text-sm font-medium">{deal.target} ← {deal.acquirer}</p>
+                      <p className="text-sm font-medium">{typeof deal.target === 'string' ? deal.target : String(deal.target || 'N/A')} ← {typeof deal.acquirer === 'string' ? deal.acquirer : String(deal.acquirer || 'N/A')}</p>
                       <div className="flex justify-between mt-1">
                         {deal.value && (
                           <span className="text-xs text-muted-foreground">
                             ${(deal.value / 1e9).toFixed(2)}B
                           </span>
                         )}
-                        <span className="text-xs text-muted-foreground">{deal.date}</span>
+                          <span className="text-xs text-muted-foreground">{typeof deal.date === 'string' ? deal.date : String(deal.date || 'N/A')}</span>
                       </div>
                     </div>
                   ))}
@@ -123,7 +123,7 @@ export function MASpecialistWidget({ status, data, error }: Props) {
                 <h4 className="text-sm font-semibold mb-2">Key Risks</h4>
                 <ul className="list-disc list-inside space-y-1">
                   {data.risks.map((risk, idx) => (
-                    <li key={idx} className="text-sm text-muted-foreground">{risk}</li>
+                    <li key={idx} className="text-sm text-muted-foreground">{typeof risk === 'string' ? risk : String(risk)}</li>
                   ))}
                 </ul>
               </div>
