@@ -1,0 +1,1 @@
+{"id": "ai-financial-analysis-app-sms2", "lang": "typescript"}
