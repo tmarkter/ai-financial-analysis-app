@@ -67,11 +67,11 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
 
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-xs text-muted-foreground">Valuation</p>
-                <p className={`text-xl font-bold ${getValuationColor(data.valuation.verdict)}`}>
-                  {data.valuation.verdict}
+                <p className={`text-xl font-bold ${getValuationColor(data.valuation?.verdict || 'Fairly Valued')}`}>
+                  {typeof data.valuation === 'string' ? data.valuation : (data.valuation?.verdict || 'N/A')}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Fair: {data.valuation.fair}
+                  Fair: {typeof data.valuation === 'object' ? (data.valuation?.fair || 'N/A') : 'N/A'}
                 </p>
               </div>
 
@@ -94,12 +94,12 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
                   <h4 className="text-sm font-semibold">{data.bullCase.title}</h4>
                 </div>
                 <ul className="space-y-2">
-                  {data.bullCase.points.map((point, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
+                    {data.bullCase.points.map((point, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm">
+                        <span className="text-green-500 mt-1">•</span>
+                        <span>{typeof point === 'string' ? point : String(point)}</span>
+                      </li>
+                    ))}
                 </ul>
               </div>
 
@@ -109,12 +109,12 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
                   <h4 className="text-sm font-semibold">{data.bearCase.title}</h4>
                 </div>
                 <ul className="space-y-2">
-                  {data.bearCase.points.map((point, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm">
-                      <span className="text-red-500 mt-1">•</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
+                    {data.bearCase.points.map((point, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm">
+                        <span className="text-red-500 mt-1">•</span>
+                        <span>{typeof point === 'string' ? point : String(point)}</span>
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
@@ -126,19 +126,32 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
                   <h4 className="text-sm font-semibold">Key Catalysts</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {data.keyCatalysts.map((catalyst, idx) => (
-                    <div key={idx} className="p-3 bg-muted rounded-lg">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{catalyst.event}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{catalyst.timing}</p>
+                  {data.keyCatalysts.map((catalyst, idx) => {
+                    // Ensure catalyst is an object with expected properties
+                    const catalystEvent = typeof catalyst === 'object' && catalyst !== null 
+                      ? (catalyst.event || String(catalyst))
+                      : String(catalyst);
+                    const catalystTiming = typeof catalyst === 'object' && catalyst !== null
+                      ? (catalyst.timing || 'TBD')
+                      : 'TBD';
+                    const catalystImpact = typeof catalyst === 'object' && catalyst !== null
+                      ? (catalyst.impact || 'neutral')
+                      : 'neutral';
+                    
+                    return (
+                      <div key={idx} className="p-3 bg-muted rounded-lg">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{catalystEvent}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{catalystTiming}</p>
+                          </div>
+                          <Badge variant={catalystImpact === "positive" ? "default" : "outline"} className="ml-2">
+                            {catalystImpact}
+                          </Badge>
                         </div>
-                        <Badge variant={catalyst.impact === "positive" ? "default" : "outline"} className="ml-2">
-                          {catalyst.impact}
-                        </Badge>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -154,7 +167,7 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
                     {data.growthDrivers.map((driver, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm p-2 bg-muted rounded">
                         <span className="text-primary mt-1">▸</span>
-                        <span>{driver}</span>
+                        <span>{typeof driver === 'string' ? driver : String(driver)}</span>
                       </li>
                     ))}
                   </ul>
@@ -171,7 +184,7 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
                     {data.keyRisks.map((risk, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm p-2 bg-muted rounded">
                         <span className="text-yellow-500 mt-1">▸</span>
-                        <span>{risk}</span>
+                        <span>{typeof risk === 'string' ? risk : String(risk)}</span>
                       </li>
                     ))}
                   </ul>
