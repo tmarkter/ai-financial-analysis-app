@@ -22,14 +22,14 @@ interface WidgetPanelProps {
 
 export function WidgetPanel({ widgets }: WidgetPanelProps) {
   return (
-    <div className="flex flex-col bg-background border-l border-border">
+    <div className="w-full min-w-0 flex flex-col bg-background border-l border-border">
       <div className="border-b border-border px-4 md:px-6 py-4 bg-card">
         <h2 className="text-base md:text-lg font-semibold text-foreground">Widget Dashboard</h2>
         <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Real-time financial insights powered by AI agents</p>
       </div>
 
-      <ScrollArea className="flex-1 p-4 md:p-6">
-        <div className="grid auto-rows-max gap-4">
+      <ScrollArea className="flex-1">
+        <div className="w-full grid auto-rows-max gap-4">
           {widgets.length === 0 && (
             <div className="text-center py-12 text-neutral-400 min-h-[400px] grid place-items-center">
               <div>
