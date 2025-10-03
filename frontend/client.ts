@@ -37,6 +37,7 @@ export class Client {
     public readonly catalog: catalog.ServiceClient
     public readonly chat_history: chat_history.ServiceClient
     public readonly config: config.ServiceClient
+    public readonly widgets: widgets.ServiceClient
     private readonly options: ClientOptions
     private readonly target: string
 
@@ -55,6 +56,7 @@ export class Client {
         this.catalog = new catalog.ServiceClient(base)
         this.chat_history = new chat_history.ServiceClient(base)
         this.config = new config.ServiceClient(base)
+        this.widgets = new widgets.ServiceClient(base)
     }
 
     /**
@@ -272,6 +274,29 @@ export namespace config {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/prompts/${encodeURIComponent(params.id)}`, {method: "PUT", body: JSON.stringify(body)})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_config_prompt_api_updatePromptEndpoint>
+        }
+    }
+}
+
+/**
+ * Import the endpoint handlers to derive the types for the client.
+ */
+import { globalIndices as api_widgets_global_indices_globalIndices } from "~backend/widgets/global-indices";
+
+export namespace widgets {
+
+    export class ServiceClient {
+        private baseClient: BaseClient
+
+        constructor(baseClient: BaseClient) {
+            this.baseClient = baseClient
+            this.globalIndices = this.globalIndices.bind(this)
+        }
+
+        public async globalIndices(params: RequestType<typeof api_widgets_global_indices_globalIndices>): Promise<ResponseType<typeof api_widgets_global_indices_globalIndices>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/widgets/global-indices`, {method: "POST", body: JSON.stringify(params)})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_widgets_global_indices_globalIndices>
         }
     }
 }

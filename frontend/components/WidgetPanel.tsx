@@ -16,6 +16,7 @@ import { MarketSentimentWidget } from "./widgets/MarketSentimentWidget";
 import { AnalystConsensusWidget } from "./widgets/AnalystConsensusWidget";
 import { InvestmentThesisWidget } from "./widgets/InvestmentThesisWidget";
 import { AlphaVantageAnalysisWidget } from "./widgets/AlphaVantageAnalysisWidget";
+import { GlobalIndicesWidget } from "./widgets/GlobalIndicesWidget";
 
 interface WidgetPanelProps {
   widgets: WidgetData[];
@@ -142,6 +143,13 @@ export function WidgetPanel({ widgets }: WidgetPanelProps) {
               )}
               {widget.id === "alpha-vantage-analysis" && (
                 <AlphaVantageAnalysisWidget
+                  status={widget.status}
+                  data={widget.data}
+                  error={widget.error}
+                />
+              )}
+              {widget.id === "global-indices" && (
+                <GlobalIndicesWidget
                   status={widget.status}
                   data={widget.data}
                   error={widget.error}
