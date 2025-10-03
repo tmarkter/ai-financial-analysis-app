@@ -1,6 +1,7 @@
 import { api } from "encore.dev/api";
 import { getOpenAI } from "../agent/openai";
 import { getPromptById } from "../config/prompts";
+import { getIndices } from "../datasources/twelve-data";
 
 export interface GlobalIndexRow {
   name: string;
@@ -30,12 +31,38 @@ const MAJOR_INDICES = [
 export const globalIndices = api(
   { expose: true, method: "POST", path: "/widgets/global-indices" },
   async (params: { query: string }): Promise<GlobalIndicesData> => {
-    const openai = getOpenAI();
+    const rows: GlobalIndexRow[] = [];
+    const sources: { name: string }[] = [];
+    
+    for (const index of MAJOR_INDICES) {
+      try {
+        const data = await getIndices({ 
+          symbol: index.ticker,
+          country: index.region 
+        });
+        
+        rows.push({
+          name: index.name,
+          ticker: index.ticker,
+          last: data.price,
+          changePct: data.percentChange,
+          local: index.region,
+        });
+        
+        if (!sources.some(s => s.name === "Twelve Data")) {
+          sources.push({ name: "Twelve Data" });
+        }
+      } catch (error) {
+        console.error(`Error fetching ${index.name}:`, error);
+      }
+    }
+    
+    if (rows.length === 0) {
+      const openai = getOpenAI();
+      const promptConfig = await getPromptById("global-indices");
+      const systemPrompt = promptConfig?.systemPrompt || "You are a global markets analyst providing index data.";
 
-    const promptConfig = await getPromptById("global-indices");
-    const systemPrompt = promptConfig?.systemPrompt || "You are a global markets analyst providing index data.";
-
-    const userPrompt = `
+      const userPrompt = `
 Query: ${params.query}
 
 Generate a snapshot of global market indices focusing on GCC and major international markets.
@@ -57,19 +84,25 @@ Return JSON matching:
 }
 `.trim();
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      temperature: 0.3,
-      response_format: { type: "json_object" },
-    });
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        temperature: 0.3,
+        response_format: { type: "json_object" },
+      });
 
-    const content = completion.choices[0].message.content || "{}";
-    const result = JSON.parse(content) as GlobalIndicesData;
+      const content = completion.choices[0].message.content || "{}";
+      const result = JSON.parse(content) as GlobalIndicesData;
+      return result;
+    }
 
-    return result;
+    return {
+      rows,
+      sources,
+      lastUpdated: new Date().toISOString(),
+    };
   }
 );

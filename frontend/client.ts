@@ -37,6 +37,7 @@ export class Client {
     public readonly catalog: catalog.ServiceClient
     public readonly chat_history: chat_history.ServiceClient
     public readonly config: config.ServiceClient
+    public readonly datasources: datasources.ServiceClient
     public readonly widgets: widgets.ServiceClient
     private readonly options: ClientOptions
     private readonly target: string
@@ -56,6 +57,7 @@ export class Client {
         this.catalog = new catalog.ServiceClient(base)
         this.chat_history = new chat_history.ServiceClient(base)
         this.config = new config.ServiceClient(base)
+        this.datasources = new datasources.ServiceClient(base)
         this.widgets = new widgets.ServiceClient(base)
     }
 
@@ -274,6 +276,80 @@ export namespace config {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/prompts/${encodeURIComponent(params.id)}`, {method: "PUT", body: JSON.stringify(body)})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_config_prompt_api_updatePromptEndpoint>
+        }
+    }
+}
+
+/**
+ * Import the endpoint handlers to derive the types for the client.
+ */
+import { getDailyStats as api_datasources_cboe_getDailyStats } from "~backend/datasources/cboe";
+import {
+    getIndices as api_datasources_twelve_data_getIndices,
+    getPrice as api_datasources_twelve_data_getPrice,
+    getTimeSeries as api_datasources_twelve_data_getTimeSeries
+} from "~backend/datasources/twelve-data";
+
+export namespace datasources {
+
+    export class ServiceClient {
+        private baseClient: BaseClient
+
+        constructor(baseClient: BaseClient) {
+            this.baseClient = baseClient
+            this.getDailyStats = this.getDailyStats.bind(this)
+            this.getIndices = this.getIndices.bind(this)
+            this.getPrice = this.getPrice.bind(this)
+            this.getTimeSeries = this.getTimeSeries.bind(this)
+        }
+
+        public async getDailyStats(params: RequestType<typeof api_datasources_cboe_getDailyStats>): Promise<ResponseType<typeof api_datasources_cboe_getDailyStats>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                date: params.date,
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/datasources/cboe/daily-stats`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_datasources_cboe_getDailyStats>
+        }
+
+        public async getIndices(params: RequestType<typeof api_datasources_twelve_data_getIndices>): Promise<ResponseType<typeof api_datasources_twelve_data_getIndices>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                country: params.country,
+                symbol:  params.symbol,
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/datasources/twelve-data/indices`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_datasources_twelve_data_getIndices>
+        }
+
+        public async getPrice(params: RequestType<typeof api_datasources_twelve_data_getPrice>): Promise<ResponseType<typeof api_datasources_twelve_data_getPrice>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                exchange: params.exchange,
+                symbol:   params.symbol,
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/datasources/twelve-data/price`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_datasources_twelve_data_getPrice>
+        }
+
+        public async getTimeSeries(params: RequestType<typeof api_datasources_twelve_data_getTimeSeries>): Promise<ResponseType<typeof api_datasources_twelve_data_getTimeSeries>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                exchange:   params.exchange,
+                interval:   params.interval,
+                outputsize: params.outputsize === undefined ? undefined : String(params.outputsize),
+                symbol:     params.symbol,
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/datasources/twelve-data/time-series`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_datasources_twelve_data_getTimeSeries>
         }
     }
 }
