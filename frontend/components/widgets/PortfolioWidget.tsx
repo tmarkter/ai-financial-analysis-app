@@ -117,7 +117,13 @@ export function PortfolioWidget({ status, data, error }: Props) {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: 6
+                        }}
+                      />
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
