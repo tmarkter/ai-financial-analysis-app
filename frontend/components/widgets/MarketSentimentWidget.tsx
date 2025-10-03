@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { PromptEditor } from "../PromptEditor";
 import { Badge } from "@/components/ui/badge";
 import type { MarketSentimentData } from "~backend/widgets/market-sentiment";
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 
 interface Props {
   status: "loading" | "complete" | "error";
@@ -104,18 +104,26 @@ export function MarketSentimentWidget({ status, data, error }: Props) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <h4 className="text-sm font-semibold mb-3 text-neutral-100">Sentiment Radar</h4>
-              <ResponsiveContainer width="100%" height={250}>
+              <ResponsiveContainer width="100%" height={260}>
                 <RadarChart data={getRadarData()}>
                   <PolarGrid stroke="rgb(38 38 38)" />
-                  <PolarAngleAxis dataKey="metric" stroke="rgb(163 163 163)" />
-                  <PolarRadiusAxis stroke="rgb(115 115 115)" />
+                  <PolarAngleAxis dataKey="metric" stroke="rgb(163 163 163)" tick={{ fontSize: 12 }} />
+                  <PolarRadiusAxis stroke="rgb(115 115 115)" tick={{ fontSize: 10 }} />
+                  <RechartsTooltip
+                    contentStyle={{
+                      backgroundColor: "rgb(10 10 10)",
+                      border: "1px solid rgb(38 38 38)",
+                      borderRadius: 6,
+                    }}
+                  />
                   <Radar
                     name="Sentiment"
                     dataKey="value"
                     stroke="rgb(34 197 94)"
                     fill="rgb(34 197 94)"
-                    fillOpacity={0.3}
+                    fillOpacity={0.28}
                   />
+                  <Legend />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
