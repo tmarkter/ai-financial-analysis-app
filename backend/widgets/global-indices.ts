@@ -1,7 +1,6 @@
 import { api } from "encore.dev/api";
-import OpenAI from "openai";
-import { getOpenAIConfig } from "../agent/openai";
-import { getPrompt } from "../config/prompts";
+import { getOpenAI } from "../agent/openai";
+import { getPromptById } from "../config/prompts";
 
 export interface GlobalIndexRow {
   name: string;
@@ -31,10 +30,10 @@ const MAJOR_INDICES = [
 export const globalIndices = api(
   { expose: true, method: "POST", path: "/widgets/global-indices" },
   async (params: { query: string }): Promise<GlobalIndicesData> => {
-    const config = getOpenAIConfig();
-    const openai = new OpenAI({ apiKey: config.apiKey });
+    const openai = getOpenAI();
 
-    const systemPrompt = await getPrompt("global-indices");
+    const promptConfig = await getPromptById("global-indices");
+    const systemPrompt = promptConfig?.systemPrompt || "You are a global markets analyst providing index data.";
 
     const userPrompt = `
 Query: ${params.query}

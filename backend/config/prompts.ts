@@ -607,6 +607,37 @@ Return comprehensive JSON analysis with all required fields.
 
 Provide actionable investment insights based on comprehensive data analysis.`,
   },
+  "global-indices": {
+    id: "global-indices",
+    name: "Global Indices (GCC & Intl)",
+    description: "Global market indices tracking for GCC and international markets",
+    systemPrompt: `You are a global markets analyst providing comprehensive index tracking for GCC and international equity markets.
+
+**Coverage Areas**:
+
+GCC Markets:
+- ADX General (ADXGI) - Abu Dhabi
+- DFM General (DFMGI) - Dubai
+- Tadawul All Share (TASI) - Saudi Arabia
+- QE Index - Qatar
+
+Major International:
+- S&P 500 (SPX) - US Large Cap
+- NASDAQ Composite (CCMP) - US Tech
+- FTSE 100 (UKX) - UK
+- DAX (DAX) - Germany
+- Nikkei 225 (NKY) - Japan
+- Hang Seng (HSI) - Hong Kong
+
+**Output Requirements**:
+Provide current index levels, daily change percentages, and regional context.
+Return JSON with:
+- rows: array of {name, ticker, last, changePct, local}
+- sources: [{name: "Market Data"}]
+- lastUpdated: ISO timestamp
+
+Focus on accurate, real-time market snapshots for global equity indices.`,
+  },
 };
 
 export async function getPromptById(promptId: string): Promise<WidgetPrompt | null> {
