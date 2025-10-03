@@ -140,12 +140,15 @@ export function InvestmentThesisWidget({ status, data, error }: Props) {
                     
                     return (
                       <div key={idx} className="p-3 bg-muted rounded-lg">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">{catalystEvent}</p>
-                            <p className="text-xs text-muted-foreground mt-1">{catalystTiming}</p>
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium line-clamp-2">{catalystEvent}</p>
+                            <p className="text-xs text-muted-foreground mt-1 truncate">{catalystTiming}</p>
                           </div>
-                          <Badge variant={catalystImpact === "positive" ? "default" : "outline"} className="ml-2">
+                          <Badge
+                            variant={catalystImpact === "positive" ? "default" : "outline"}
+                            className="ml-2 shrink-0"
+                          >
                             {catalystImpact}
                           </Badge>
                         </div>
