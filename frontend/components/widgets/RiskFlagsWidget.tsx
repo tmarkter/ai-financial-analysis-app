@@ -11,15 +11,15 @@ interface Props {
 }
 
 export function RiskFlagsWidget({ status, data, error }: Props) {
-  const hasMatches = data?.matches && data.matches.length > 0;
-  const isEmpty = !hasMatches && status === "complete";
+  const hasMatches = Array.isArray(data?.matches) && data!.matches.length > 0;
+  const isEmpty = status === "complete" && !hasMatches;
 
   return (
     <WidgetShell 
       title="Risk Flags" 
       isLoading={status === "loading"}
       error={error}
-      isEmpty={false}
+      isEmpty={isEmpty}
       minHeight={220}
       footer={data?.sources ? (
         <div>
