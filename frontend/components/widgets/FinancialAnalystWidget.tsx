@@ -36,28 +36,28 @@ export function FinancialAnalystWidget({ status, data, error }: Props) {
             <h4 className="text-sm font-semibold mb-3 text-neutral-100">Financial Metrics</h4>
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 bg-neutral-950 rounded-lg border border-neutral-800">
-                <p className="text-xs text-neutral-400">Revenue</p>
-                <p className="text-lg font-bold text-neutral-100">
+                <p className="text-sm text-neutral-300">Revenue</p>
+                <p className="text-xl font-bold text-neutral-100">
                   {fmtCurrencyUSD(data.financialMetrics.revenue)}
                 </p>
               </div>
               <div className="p-3 bg-neutral-950 rounded-lg border border-neutral-800">
-                <p className="text-xs text-neutral-400">Net Income</p>
-                <p className="text-lg font-bold text-neutral-100">
+                <p className="text-sm text-neutral-300">Net Income</p>
+                <p className="text-xl font-bold text-neutral-100">
                   {fmtCurrencyUSD(data.financialMetrics.netIncome)}
                 </p>
               </div>
               {data.financialMetrics.margins && (
                 <>
                   <div className="p-3 bg-neutral-950 rounded-lg border border-neutral-800">
-                    <p className="text-xs text-neutral-400">Gross Margin</p>
-                    <p className="text-lg font-bold text-neutral-100">
+                    <p className="text-sm text-neutral-300">Gross Margin</p>
+                    <p className="text-xl font-bold text-neutral-100">
                       {fmtPercent(data.financialMetrics.margins.gross)}
                     </p>
                   </div>
                   <div className="p-3 bg-neutral-950 rounded-lg border border-neutral-800">
-                    <p className="text-xs text-neutral-400">Net Margin</p>
-                    <p className="text-lg font-bold text-neutral-100">
+                    <p className="text-sm text-neutral-300">Net Margin</p>
+                    <p className="text-xl font-bold text-neutral-100">
                       {fmtPercent(data.financialMetrics.margins.net)}
                     </p>
                   </div>
