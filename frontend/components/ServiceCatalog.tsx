@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import backend from "~backend/client";
+import backend from "@/utils/backendClient";
 
 export function ServiceCatalog() {
   const [open, setOpen] = useState(false);

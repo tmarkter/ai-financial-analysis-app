@@ -3,7 +3,7 @@ import { Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import backend from "~backend/client";
+import backend from "@/utils/backendClient";
 import { WidgetData } from "./AnalysisDashboard";
 import { ChatHistory } from "./ChatHistory";
 import { PromptEditor } from "./PromptEditor";

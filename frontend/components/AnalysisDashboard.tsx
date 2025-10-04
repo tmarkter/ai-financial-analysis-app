@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChatPanel } from "./ChatPanel";
 import { WidgetPanel } from "./WidgetPanel";
 import { Header } from "./Header";
-import backend from "~backend/client";
+import backend from "@/utils/backendClient";
 
 export interface WidgetData {
   id: string;
