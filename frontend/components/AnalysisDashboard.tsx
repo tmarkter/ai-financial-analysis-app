@@ -81,8 +81,8 @@ export function AnalysisDashboard() {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       <Header onNewChat={handleNewSession} />
-      <div className="flex flex-1 overflow-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-start justify-items-stretch">
+      <div className="flex flex-1 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 w-full h-full">
           <ChatPanel
             messages={chatMessages}
             onNewQuery={handleNewQuery}

@@ -85,7 +85,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
   };
 
   return (
-    <div className="w-full min-w-0 flex flex-col border-r border-border bg-card">
+    <div className="w-full h-full min-w-0 flex flex-col border-r border-border bg-card">
       <div className="border-b border-border px-4 md:px-6 py-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">

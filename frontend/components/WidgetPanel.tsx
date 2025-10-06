@@ -24,7 +24,7 @@ interface WidgetPanelProps {
 
 export function WidgetPanel({ widgets }: WidgetPanelProps) {
   return (
-    <div className="w-full min-w-0 flex flex-col bg-background border-l border-border">
+    <div className="w-full h-full min-w-0 flex flex-col bg-background border-l border-border">
       <div className="border-b border-border px-4 md:px-6 py-4 bg-card">
         <h2 className="text-lg md:text-xl font-semibold text-foreground">Widget Dashboard</h2>
         <p className="text-sm md:text-base text-muted-foreground hidden sm:block">Real-time financial insights powered by AI agents</p>
