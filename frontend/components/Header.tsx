@@ -18,7 +18,7 @@ export function Header({ onNewChat }: HeaderProps) {
             <p className="text-sm text-muted-foreground">Multi-agent financial insights platform</p>
           </div>
         </div>
-        <Button onClick={onNewChat} variant="outline" size="sm" className="gap-2">
+        <Button onClick={onNewChat} variant="outline" size="sm" className="gap-2 text-white border-white/20 hover:bg-white/10">
           <PlusCircle className="h-4 w-4" />
           New Chat
         </Button>

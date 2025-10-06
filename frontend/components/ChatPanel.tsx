@@ -103,11 +103,11 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
         <div className="space-y-4 max-w-4xl">
           {messages.length === 0 && (
             <div className="text-center py-8 md:py-12">
-              <p className="text-base text-muted-foreground mb-4">Start by asking about a company</p>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <p className="text-lg text-muted-foreground mb-6">Start by asking about a company</p>
+              <div className="flex flex-wrap gap-2 justify-center max-w-2xl mx-auto">
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="default"
                   onClick={() => setQuery("Analyze Apple company")}
                   className="text-white border-white/20 hover:bg-white/10"
                 >
@@ -115,7 +115,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
                 </Button>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="default"
                   onClick={() => setQuery("Tesla financial overview")}
                   className="text-white border-white/20 hover:bg-white/10"
                 >
@@ -123,11 +123,51 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
                 </Button>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="default"
                   onClick={() => setQuery("Bitcoin price and news")}
                   className="text-white border-white/20 hover:bg-white/10"
                 >
                   Bitcoin Info
+                </Button>
+                <Button
+                  variant="outline"
+                  size="default"
+                  onClick={() => setQuery("Compare Microsoft and Google")}
+                  className="text-white border-white/20 hover:bg-white/10"
+                >
+                  Microsoft vs Google
+                </Button>
+                <Button
+                  variant="outline"
+                  size="default"
+                  onClick={() => setQuery("Nvidia stock analysis")}
+                  className="text-white border-white/20 hover:bg-white/10"
+                >
+                  Nvidia Stock
+                </Button>
+                <Button
+                  variant="outline"
+                  size="default"
+                  onClick={() => setQuery("Amazon investment thesis")}
+                  className="text-white border-white/20 hover:bg-white/10"
+                >
+                  Amazon Investment
+                </Button>
+                <Button
+                  variant="outline"
+                  size="default"
+                  onClick={() => setQuery("Meta financial health")}
+                  className="text-white border-white/20 hover:bg-white/10"
+                >
+                  Meta Financial Health
+                </Button>
+                <Button
+                  variant="outline"
+                  size="default"
+                  onClick={() => setQuery("Global market indices today")}
+                  className="text-white border-white/20 hover:bg-white/10"
+                >
+                  Global Indices
                 </Button>
               </div>
             </div>
@@ -145,7 +185,7 @@ export function ChatPanel({ messages, onNewQuery, onWidgetUpdate, onChatMessage,
                     : "bg-muted text-foreground"
                 }`}
               >
-                <p className="text-base whitespace-pre-wrap">
+                <p className="text-lg whitespace-pre-wrap">
                   {typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content, null, 2)}
                 </p>
               </div>
