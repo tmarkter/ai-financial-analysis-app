@@ -29,9 +29,18 @@ export async function getGlobalQuote(symbol: string, apiKey: string): Promise<Gl
     throw new Error(`Alpha Vantage error: ${data["Error Message"]}`);
   }
 
+  if (data["Note"]) {
+    throw new Error(`Alpha Vantage rate limit: ${data["Note"]}`);
+  }
+
+  if (data["Information"]) {
+    throw new Error(`Alpha Vantage info: ${data["Information"]}`);
+  }
+
   const quote = data["Global Quote"];
-  if (!quote) {
-    throw new Error("No quote data available");
+  if (!quote || Object.keys(quote).length === 0) {
+    console.error("Alpha Vantage response:", JSON.stringify(data));
+    throw new Error(`No quote data available for symbol: ${symbol}. Response: ${JSON.stringify(data).substring(0, 200)}`);
   }
 
   return {
@@ -56,9 +65,18 @@ export async function getDailyTimeSeries(
     throw new Error(`Alpha Vantage error: ${data["Error Message"]}`);
   }
 
+  if (data["Note"]) {
+    throw new Error(`Alpha Vantage rate limit: ${data["Note"]}`);
+  }
+
+  if (data["Information"]) {
+    throw new Error(`Alpha Vantage info: ${data["Information"]}`);
+  }
+
   const timeSeries = data["Time Series (Daily)"];
   if (!timeSeries) {
-    throw new Error("No time series data available");
+    console.error("Alpha Vantage response:", JSON.stringify(data));
+    throw new Error(`No time series data available for symbol: ${symbol}`);
   }
 
   const items: DailyTimeSeriesItem[] = [];
@@ -125,8 +143,17 @@ export async function getCompanyOverview(
     throw new Error(`Alpha Vantage error: ${data["Error Message"]}`);
   }
 
+  if (data["Note"]) {
+    throw new Error(`Alpha Vantage rate limit: ${data["Note"]}`);
+  }
+
+  if (data["Information"]) {
+    throw new Error(`Alpha Vantage info: ${data["Information"]}`);
+  }
+
   if (!data.Symbol) {
-    throw new Error("No company overview data available");
+    console.error("Alpha Vantage response:", JSON.stringify(data));
+    throw new Error(`No company overview data available for symbol: ${symbol}`);
   }
 
   return {
