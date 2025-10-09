@@ -26,7 +26,7 @@ export function PromptEditor({ promptId, promptName }: PromptEditorProps) {
 
   const loadPrompt = async () => {
     try {
-      const data = await backend.config.getPrompt({ id: promptId });
+      const data = await backend.config.getPrompt(promptId);
       setPrompt(data.systemPrompt || "");
     } catch (error) {
       console.error("Error loading prompt:", error);
@@ -37,8 +37,7 @@ export function PromptEditor({ promptId, promptName }: PromptEditorProps) {
   const savePrompt = async () => {
     setLoading(true);
     try {
-      await backend.config.updatePromptEndpoint({
-        id: promptId,
+      await backend.config.updatePromptEndpoint(promptId, {
         systemPrompt: prompt,
       });
       toast({
