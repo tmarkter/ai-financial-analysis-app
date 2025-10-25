@@ -1,41 +1,7 @@
 import { EntityInfo } from "../agent/entity-extraction";
 import { getFREDSeries } from "../datasources/fred";
 import { getOpenAI, getFREDKey } from "../agent/openai";
-
-const SYSTEM_PROMPT = `You are a professional financial and investment analyst. Prepare a comprehensive and structured analysis of any bank (or financial institution) using a clear framework that combines both internal (Micro factors) and external (Macro factors) that investors consider before making an investment decision.
-
-✦ Deliverables:
-Executive Summary: Provide a brief overview of the bank's position and the industry context.
-
-Micro Analysis (Internal – Bank-Specific Factors):
-- Profitability: Net Interest Margin (NIM), Return on Assets (ROA), Return on Equity (ROE).
-- Asset Quality: Non-Performing Loans (NPL) ratio, Provision Coverage, Loan-to-Deposit ratio.
-- Capital Adequacy: CET1 ratio, Total Capital Ratio.
-- Operational Efficiency: Cost-to-Income ratio.
-- Growth: Loan and deposit growth trends.
-- Income Diversification: Fee-based income vs. interest income.
-- Digitalization & Innovation: Fintech integration, mobile adoption, cost efficiency from digital channels.
-- Management & Governance: Leadership quality, governance, and risk management practices.
-
-Macro Analysis (External – Market & Economic Factors):
-- Interest Rate Environment.
-- Economic Growth (GDP trends).
-- Inflation impact.
-- Unemployment levels.
-- Monetary Policy & Regulation (Basel III/IV, IFRS 9, AML/KYC, central bank rules).
-- Political & Sovereign Risk.
-- Currency Stability.
-- Competition & Market Consolidation.
-
-Valuation Metrics: Price-to-Book (P/B), Price-to-Earnings (P/E), Dividend Yield, EV/EBITDA.
-
-Forward-Looking Outlook: Opportunities, risks, and expected future performance.
-
-✦ Instructions:
-Use a structured, section-based format with clear headings and subheadings.
-Provide explanations and, where relevant, examples or implications.
-Link financial indicators to expected investor outcomes.
-Ensure the analysis is suitable for use in an equity research report or investment memo.`;
+import { WIDGET_PROMPTS } from "../config/prompts";
 
 export interface MacroIndicator {
   name: string;
@@ -99,24 +65,20 @@ export async function processMacroSector(
 
   // Generate comprehensive analysis using OpenAI
   const openai = getOpenAI();
+  const prompt = WIDGET_PROMPTS["macro-sector"];
+  
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: SYSTEM_PROMPT,
+        content: prompt?.systemPrompt || "You are a macroeconomic strategist analyzing market conditions and sector performance.",
       },
       {
         role: "user",
-        content: `Perform a comprehensive macro and micro analysis for ${entity.companyName || entity.ticker || "the financial institution"}.
+        content: `Perform a comprehensive macro and micro analysis for ${entity.companyName || entity.ticker || "the company"}.
 
 ${indicators.length > 0 ? `Available macro indicators:\n${JSON.stringify(indicators.map((i) => ({ name: i.name, value: i.value })))}` : 'No specific macro indicators available - use general economic knowledge.'}
-
-Provide:
-1. Executive Summary
-2. Micro Analysis (if this is a financial institution, include all bank-specific factors; otherwise adapt to the company type)
-3. Macro Analysis ${indicators.length > 0 ? 'using the provided indicators' : 'based on current economic conditions'}
-4. Key insights and forward-looking outlook
 
 Return JSON with:
 - summary: comprehensive executive summary and analysis
